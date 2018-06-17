@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { DragSource } from 'react-dnd';
 import { getEmptyImage } from 'react-dnd-html5-backend';
 
+import DnDComponent from '../../DndComponents';
 import { position } from 'config/theme';
 import { ItemTypes } from '../../constants';
 
@@ -19,7 +20,7 @@ class DragObject extends React.Component {
   }
 
   render() {
-    const { connectDragSource, isDragging } = this.props;
+    const { connectDragSource, isDragging, type } = this.props;
 
     return (
       <StyledDragObject
@@ -28,7 +29,7 @@ class DragObject extends React.Component {
           opacity: isDragging ? 0.5 : 1,
         }}
       >
-        <span style={{ zIndex: 6 }}>Drag me</span>
+        <DnDComponent type={type} style={{ zIndex: -1 }} />
       </StyledDragObject>
     );
   }
@@ -54,10 +55,9 @@ export default DragSource(ItemTypes.DRAG_OBJECT, dragObjectSource, collect)(
   DragObject,
 );
 
-export const StyledDragObject = styled.div`
-  width: 10rem;
-  height: 10rem;
-  background-color: white;
+export const StyledDragObject = styled.span`
+  /* width: 10rem; */
+  /* height: 10rem; */
   cursor: pointer;
-  ${position('centerChildren')};
+  ${position('centerChildren', { display: 'inline-flex' })};
 `;

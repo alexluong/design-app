@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { DragLayer } from 'react-dnd';
 
 import DnDComponent from '../../DndComponents';
-import { position } from 'config/theme';
 
 const XYCoord = PropTypes.shape({
   x: PropTypes.number.isRequired,
@@ -14,13 +13,13 @@ const XYCoord = PropTypes.shape({
 class CustomDragLayer extends Component {
   static propTypes = {
     item: PropTypes.object,
-    initialOffset: XYCoord,
+    // initialOffset: XYCoord,
     currentOffset: XYCoord,
     isDragging: PropTypes.bool.isRequired,
   };
 
   render() {
-    const { isDragging, item } = this.props;
+    const { isDragging, item, currentOffset } = this.props;
 
     if (!isDragging) {
       return null;
@@ -30,7 +29,7 @@ class CustomDragLayer extends Component {
 
     return (
       <Container>
-        <DnDComponent type={type} style={getItemStyles(this.props)} />;
+        <DnDComponent type={type} style={getItemStyles(currentOffset)} />
       </Container>
     );
   }
@@ -39,7 +38,7 @@ class CustomDragLayer extends Component {
 function collect(monitor) {
   return {
     item: monitor.getItem(),
-    initialOffset: monitor.getInitialSourceClientOffset(),
+    // initialOffset: monitor.getInitialSourceClientOffset(),
     currentOffset: monitor.getSourceClientOffset(),
     isDragging: monitor.isDragging(),
   };
@@ -47,19 +46,19 @@ function collect(monitor) {
 
 export default DragLayer(collect)(CustomDragLayer);
 
-function getItemStyles(props) {
-  const { initialOffset, currentOffset } = props;
-
-  if (!initialOffset || !currentOffset) {
+function getItemStyles(currentOffset) {
+  if (!currentOffset) {
     return {
       display: 'none',
     };
   }
 
-  let { x, y } = currentOffset;
-
+  const { x, y } = currentOffset;
   const transform = `translate(${x}px, ${y}px)`;
+
   return {
+    display: 'block',
+    opacity: 0.75,
     transform,
     WebkitTransform: transform,
   };
@@ -73,13 +72,4 @@ const Container = styled.div`
   top: 0;
   width: 100%;
   height: 100%;
-`;
-
-const Layer = styled.div`
-  z-index: 10000;
-  width: 10rem;
-  height: 10rem;
-  background-color: green;
-  cursor: pointer;
-  ${position('centerChildren')};
 `;

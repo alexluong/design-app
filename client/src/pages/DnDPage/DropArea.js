@@ -30,17 +30,9 @@ class DropArea extends React.Component {
           this.dropArea = instance;
         }}
       >
-        {components.map(({ type, position: { x, y } }, i) => {
-          return <StyledDnDComponent key={i} type={type} x={x} y={y} />;
-          // switch (type) {
-          //   case 'block':
-          //     return <Component key={i} x={x} y={y} />;
-          //   case 'smallerBlock':
-          //     return <SmallerComponent key={i} x={x} y={y} />;
-          //   default:
-          //     return null;
-          // }
-        })}
+        {components.map(({ type, position: { x, y } }, i) => (
+          <StyledDnDComponent key={i} type={type} x={x} y={y} />
+        ))}
         <Overlay show={isOver} />
       </StyledDropArea>
     );
@@ -93,6 +85,7 @@ const StyledDropArea = styled.div`
   height: 100%;
   background-color: pink;
   position: relative;
+  overflow: hidden;
 `;
 
 const Overlay = styled.div`

@@ -10,6 +10,7 @@ class Sidebar extends React.Component {
       <Container>
         <DragObject type="button" />
         <DragObject type="block" />
+        <DragObject type="input" />
         <CustomDragLayer />
       </Container>
     );

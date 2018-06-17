@@ -2,6 +2,7 @@ import React from 'react';
 
 import { BlockComponent } from './BlockComponent';
 import { ButtonComponent } from './ButtonComponent';
+import { InputComponent } from './InputComponent';
 
 const DnDComponent = ({ type, ...props }) => {
   switch (type) {
@@ -9,6 +10,8 @@ const DnDComponent = ({ type, ...props }) => {
       return <BlockComponent {...props} />;
     case 'button':
       return <ButtonComponent {...props} />;
+    case 'input':
+      return <InputComponent {...props} />;
     default:
       return <BlockComponent {...props} />;
   }
