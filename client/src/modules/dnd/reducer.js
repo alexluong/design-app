@@ -1,13 +1,13 @@
 import { DROP } from './types';
 
 const initialState = {
-  elements: [],
+  components: [],
 };
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case DROP:
       return {
-        elements: [action.payload.position, ...state.elements],
+        components: [action.payload.component, ...state.components],
       };
     default:
       return state;

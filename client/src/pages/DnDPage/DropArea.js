@@ -7,21 +7,67 @@ import { DropTarget } from 'react-dnd';
 import { ItemTypes } from './constants';
 import { drop } from 'modules/dnd';
 
+class DropArea extends React.Component {
+  static propTypes = {
+    connectDropTarget: PropTypes.func.isRequired,
+    isOver: PropTypes.bool.isRequired,
+  };
+
+  constructor(props) {
+    super(props);
+
+    this.dropArea = React.createRef();
+  }
+
+  render() {
+    const { connectDropTarget, isOver, components } = this.props;
+
+    return (
+      <StyledDropArea
+        innerRef={instance => {
+          connectDropTarget(instance);
+          this.dropArea = instance;
+        }}
+      >
+        {components.map(({ type, position: { x, y } }, i) => {
+          switch (type) {
+            case 'block':
+              return <Component key={i} x={x} y={y} />;
+            case 'smallerBlock':
+              return <SmallerComponent key={i} x={x} y={y} />;
+            default:
+              return null;
+          }
+        })}
+        <Overlay show={isOver} />
+      </StyledDropArea>
+    );
+  }
+}
+
 const dropAreaTarget = {
   drop(props, monitor, component) {
+    //* Object stuff
+    const object = monitor.getItem();
+    const objectOffset = monitor.getSourceClientOffset();
+
+    //* Drop Area stuff
     const dropArea = component.dropArea;
     const dropAreaOffset = {
       x: dropArea.offsetLeft,
       y: dropArea.offsetTop,
     };
-    const objectOffset = monitor.getSourceClientOffset();
 
+    //* Offset
     const offsetWithinDropArea = {
       x: objectOffset.x - dropAreaOffset.x,
       y: objectOffset.y - dropAreaOffset.y,
     };
-
-    props.drop(offsetWithinDropArea);
+    console.log('hello');
+    props.drop({
+      type: object.type,
+      position: offsetWithinDropArea,
+    });
   },
 };
 
@@ -32,45 +78,14 @@ function collect(connect, monitor) {
   };
 }
 
-const propTypes = {
-  connectDropTarget: PropTypes.func.isRequired,
-  isOver: PropTypes.bool.isRequired,
-};
-
-class DropArea extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.dropArea = React.createRef();
-  }
-
-  render() {
-    const { connectDropTarget, isOver, elements } = this.props;
-    return (
-      <StyledDropArea
-        innerRef={instance => {
-          connectDropTarget(instance);
-          this.dropArea = instance;
-        }}
-      >
-        {elements.map(({ x, y }, i) => {
-          console.log(x, y);
-          return <Element key={i} x={x} y={y} />;
-        })}
-        <Overlay show={isOver} />
-      </StyledDropArea>
-    );
-  }
-}
-
-DropArea.propTypes = propTypes;
 DropArea = DropTarget(ItemTypes.DRAG_OBJECT, dropAreaTarget, collect)(DropArea);
 export default connect(
-  state => ({ elements: state.dnd.elements }),
+  state => ({ components: state.dnd.components }),
   { drop },
 )(DropArea);
 
 const StyledDropArea = styled.div`
+  z-index: 4;
   width: 100%;
   height: 100%;
   background-color: pink;
@@ -89,12 +104,22 @@ const Overlay = styled.div`
   background-color: yellow;
 `;
 
-const Element = styled.div`
+const Component = styled.div`
   position: absolute;
   left: ${props => props.x}px;
   top: ${props => props.y}px;
   width: 10rem;
   height: 10rem;
+  background-color: white;
+  cursor: pointer;
+`;
+
+const SmallerComponent = styled.div`
+  position: absolute;
+  left: ${props => props.x}px;
+  top: ${props => props.y}px;
+  width: 5rem;
+  height: 5rem;
   background-color: white;
   cursor: pointer;
 `;

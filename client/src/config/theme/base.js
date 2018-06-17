@@ -29,4 +29,7 @@ injectGlobal`
     width: 100%;
     height: 100%;
   }
+  #portal {
+    z-index: 999999;
+  }
 `;

@@ -1,8 +1,10 @@
 import { DROP } from './types';
 
-const drop = position => ({
+const drop = component => ({
   type: DROP,
-  payload: { position },
+  payload: {
+    component,
+  },
 });
 
 export { drop };
