@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { DragSource } from 'react-dnd';
 
 import { position } from 'config/theme';
-import { ItemTypes } from './constants';
+import { ItemTypes } from '../constants';
 
 const dragObjectSource = {
   beginDrag(props) {
@@ -47,8 +47,8 @@ export default DragSource(ItemTypes.DRAG_OBJECT, dragObjectSource, collect)(
 );
 
 const StyledDragObject = styled.div`
-  width: 300px;
-  height: 200px;
+  width: 10rem;
+  height: 10rem;
   background-color: white;
   cursor: pointer;
   ${position('centerChildren')};

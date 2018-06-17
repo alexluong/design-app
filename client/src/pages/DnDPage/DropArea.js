@@ -1,9 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { connect } from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
 import { ItemTypes } from './constants';
+import { drop } from 'modules/dnd';
 
 const dropAreaTarget = {
   drop(props, monitor, component) {
@@ -18,7 +20,8 @@ const dropAreaTarget = {
       x: objectOffset.x - dropAreaOffset.x,
       y: objectOffset.y - dropAreaOffset.y,
     };
-    console.log(offsetWithinDropArea);
+
+    props.drop(offsetWithinDropArea);
   },
 };
 
@@ -42,7 +45,7 @@ class DropArea extends React.Component {
   }
 
   render() {
-    const { connectDropTarget, isOver } = this.props;
+    const { connectDropTarget, isOver, elements } = this.props;
     return (
       <StyledDropArea
         innerRef={instance => {
@@ -50,6 +53,10 @@ class DropArea extends React.Component {
           this.dropArea = instance;
         }}
       >
+        {elements.map(({ x, y }, i) => {
+          console.log(x, y);
+          return <Element key={i} x={x} y={y} />;
+        })}
         <Overlay show={isOver} />
       </StyledDropArea>
     );
@@ -57,13 +64,15 @@ class DropArea extends React.Component {
 }
 
 DropArea.propTypes = propTypes;
-export default DropTarget(ItemTypes.DRAG_OBJECT, dropAreaTarget, collect)(
-  DropArea,
-);
+DropArea = DropTarget(ItemTypes.DRAG_OBJECT, dropAreaTarget, collect)(DropArea);
+export default connect(
+  state => ({ elements: state.dnd.elements }),
+  { drop },
+)(DropArea);
 
 const StyledDropArea = styled.div`
   width: 100%;
-  height: 50vh;
+  height: 100%;
   background-color: pink;
   position: relative;
 `;
@@ -78,4 +87,14 @@ const Overlay = styled.div`
   width: 100%;
   z-index: 1;
   background-color: yellow;
+`;
+
+const Element = styled.div`
+  position: absolute;
+  left: ${props => props.x}px;
+  top: ${props => props.y}px;
+  width: 10rem;
+  height: 10rem;
+  background-color: white;
+  cursor: pointer;
 `;
