@@ -1,8 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import DragObject from './DragObject';
-import CustomDragLayer from './DragObject/CustomDragLayer';
+import DragObject from '../DragObject';
 
 class Sidebar extends React.Component {
   render() {
@@ -11,7 +10,6 @@ class Sidebar extends React.Component {
         <DragObject type="button" />
         <DragObject type="block" />
         <DragObject type="input" />
-        <CustomDragLayer />
       </Container>
     );
   }

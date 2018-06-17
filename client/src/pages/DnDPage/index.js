@@ -3,16 +3,20 @@ import styled from 'styled-components';
 import HTML5Backend from 'react-dnd-html5-backend';
 import { DragDropContext } from 'react-dnd';
 
-import Sidebar from './Sidebar';
-import DropArea from './DropArea';
+import Sidebar from './components/Sidebar';
+import DropArea from './components/DropArea';
+import CustomDragLayer from './components/CustomDragLayer';
 
 class DnDPage extends React.Component {
   render() {
     return (
-      <Container>
-        <Sidebar />
-        <DropArea />
-      </Container>
+      <React.Fragment>
+        <Container>
+          <Sidebar />
+          <DropArea />
+        </Container>
+        <CustomDragLayer />
+      </React.Fragment>
     );
   }
 }

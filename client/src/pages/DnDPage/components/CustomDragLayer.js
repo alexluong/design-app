@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { DragLayer } from 'react-dnd';
 
-import DnDComponent from '../../DndComponents';
+import DnDComponent from './DndComponents';
 
 const XYCoord = PropTypes.shape({
   x: PropTypes.number.isRequired,

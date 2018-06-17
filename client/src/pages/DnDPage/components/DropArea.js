@@ -3,10 +3,11 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { DropTarget } from 'react-dnd';
+import uuidv1 from 'uuid/v1';
 
-import DnDComponent from './DndComponents';
-import { ItemTypes } from './constants';
-import { drop } from 'modules/dnd';
+import DragObject from './DragObject';
+import { ItemTypes } from '../constants';
+import { drop, move } from 'modules/dnd';
 
 class DropArea extends React.Component {
   static propTypes = {
@@ -22,6 +23,7 @@ class DropArea extends React.Component {
 
   render() {
     const { connectDropTarget, isOver, components } = this.props;
+    const componentsKeys = Object.keys(components);
 
     return (
       <StyledDropArea
@@ -30,9 +32,21 @@ class DropArea extends React.Component {
           this.dropArea = instance;
         }}
       >
-        {components.map(({ type, position: { x, y } }, i) => (
-          <StyledDnDComponent key={i} type={type} x={x} y={y} />
-        ))}
+        {componentsKeys.map(key => {
+          const { id, type, position } = components[key];
+          return (
+            <DragObject
+              key={id}
+              id={id}
+              type={type}
+              style={{
+                position: 'absolute',
+                left: `${position.x}px`,
+                top: `${position.y}px`,
+              }}
+            />
+          );
+        })}
         <Overlay show={isOver} />
       </StyledDropArea>
     );
@@ -41,7 +55,6 @@ class DropArea extends React.Component {
 
 const dropAreaTarget = {
   drop(props, monitor, component) {
-    console.log('drop');
     //* Object stuff
     const object = monitor.getItem();
     const objectOffset = monitor.getSourceClientOffset();
@@ -59,10 +72,17 @@ const dropAreaTarget = {
       y: objectOffset.y - dropAreaOffset.y,
     };
 
-    props.drop({
+    const droppedObject = {
+      id: object.id || uuidv1(),
       type: object.type,
       position: offsetWithinDropArea,
-    });
+    };
+
+    if (object.id) {
+      props.move(droppedObject);
+    } else {
+      props.drop(droppedObject);
+    }
   },
 };
 
@@ -76,7 +96,7 @@ function collect(connect, monitor) {
 DropArea = DropTarget(ItemTypes.DRAG_OBJECT, dropAreaTarget, collect)(DropArea);
 export default connect(
   state => ({ components: state.dnd.components }),
-  { drop },
+  { drop, move },
 )(DropArea);
 
 const StyledDropArea = styled.div`
@@ -98,10 +118,4 @@ const Overlay = styled.div`
   width: 100%;
   z-index: 1;
   background-color: yellow;
-`;
-
-const StyledDnDComponent = styled(DnDComponent)`
-  position: absolute;
-  left: ${props => props.x}px;
-  top: ${props => props.y}px;
 `;
