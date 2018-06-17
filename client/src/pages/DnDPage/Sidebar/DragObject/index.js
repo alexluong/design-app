@@ -55,7 +55,6 @@ export default DragSource(ItemTypes.DRAG_OBJECT, dragObjectSource, collect)(
 );
 
 export const StyledDragObject = styled.div`
-  z-index: 1000000;
   width: 10rem;
   height: 10rem;
   background-color: white;

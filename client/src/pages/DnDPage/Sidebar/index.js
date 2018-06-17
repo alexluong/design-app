@@ -8,8 +8,8 @@ class Sidebar extends React.Component {
   render() {
     return (
       <Container>
+        <DragObject type="button" />
         <DragObject type="block" />
-        <DragObject type="smallerBlock" />
         <CustomDragLayer />
       </Container>
     );

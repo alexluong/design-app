@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import { connect } from 'react-redux';
 import { DropTarget } from 'react-dnd';
 
+import DnDComponent from './DndComponents';
 import { ItemTypes } from './constants';
 import { drop } from 'modules/dnd';
 
@@ -30,14 +31,15 @@ class DropArea extends React.Component {
         }}
       >
         {components.map(({ type, position: { x, y } }, i) => {
-          switch (type) {
-            case 'block':
-              return <Component key={i} x={x} y={y} />;
-            case 'smallerBlock':
-              return <SmallerComponent key={i} x={x} y={y} />;
-            default:
-              return null;
-          }
+          return <StyledDnDComponent key={i} type={type} x={x} y={y} />;
+          // switch (type) {
+          //   case 'block':
+          //     return <Component key={i} x={x} y={y} />;
+          //   case 'smallerBlock':
+          //     return <SmallerComponent key={i} x={x} y={y} />;
+          //   default:
+          //     return null;
+          // }
         })}
         <Overlay show={isOver} />
       </StyledDropArea>
@@ -47,6 +49,7 @@ class DropArea extends React.Component {
 
 const dropAreaTarget = {
   drop(props, monitor, component) {
+    console.log('drop');
     //* Object stuff
     const object = monitor.getItem();
     const objectOffset = monitor.getSourceClientOffset();
@@ -63,7 +66,7 @@ const dropAreaTarget = {
       x: objectOffset.x - dropAreaOffset.x,
       y: objectOffset.y - dropAreaOffset.y,
     };
-    console.log('hello');
+
     props.drop({
       type: object.type,
       position: offsetWithinDropArea,
@@ -104,22 +107,8 @@ const Overlay = styled.div`
   background-color: yellow;
 `;
 
-const Component = styled.div`
+const StyledDnDComponent = styled(DnDComponent)`
   position: absolute;
   left: ${props => props.x}px;
   top: ${props => props.y}px;
-  width: 10rem;
-  height: 10rem;
-  background-color: white;
-  cursor: pointer;
-`;
-
-const SmallerComponent = styled.div`
-  position: absolute;
-  left: ${props => props.x}px;
-  top: ${props => props.y}px;
-  width: 5rem;
-  height: 5rem;
-  background-color: white;
-  cursor: pointer;
 `;

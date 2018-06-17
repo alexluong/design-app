@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { DragLayer } from 'react-dnd';
 
+import DnDComponent from '../../DndComponents';
 import { position } from 'config/theme';
 
 const XYCoord = PropTypes.shape({
@@ -13,22 +14,23 @@ const XYCoord = PropTypes.shape({
 class CustomDragLayer extends Component {
   static propTypes = {
     item: PropTypes.object,
-    itemType: PropTypes.string,
     initialOffset: XYCoord,
     currentOffset: XYCoord,
     isDragging: PropTypes.bool.isRequired,
   };
 
   render() {
-    const { item, itemType, isDragging } = this.props;
+    const { isDragging, item } = this.props;
 
     if (!isDragging) {
       return null;
     }
 
+    const { type } = item;
+
     return (
       <Container>
-        <Layer style={getItemStyles(this.props)} />
+        <DnDComponent type={type} style={getItemStyles(this.props)} />;
       </Container>
     );
   }
@@ -37,7 +39,6 @@ class CustomDragLayer extends Component {
 function collect(monitor) {
   return {
     item: monitor.getItem(),
-    itemType: monitor.getItemType(),
     initialOffset: monitor.getInitialSourceClientOffset(),
     currentOffset: monitor.getSourceClientOffset(),
     isDragging: monitor.isDragging(),
@@ -48,7 +49,7 @@ export default DragLayer(collect)(CustomDragLayer);
 
 function getItemStyles(props) {
   const { initialOffset, currentOffset } = props;
-  console.log(currentOffset);
+
   if (!initialOffset || !currentOffset) {
     return {
       display: 'none',
