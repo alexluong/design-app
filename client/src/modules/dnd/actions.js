@@ -1,7 +1,7 @@
-import { MOVE, DROP, CLEAR } from './types';
+import { UPDATE, DROP, CLEAR } from './types';
 
-const move = component => ({
-  type: MOVE,
+const update = component => ({
+  type: UPDATE,
   payload: {
     component,
   },
@@ -18,4 +18,4 @@ const clear = () => ({
   type: CLEAR,
 });
 
-export { move, drop, clear };
+export { update, drop, clear };

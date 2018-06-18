@@ -2,7 +2,6 @@ import React from 'react';
 import { connect } from 'react-redux';
 
 import { select } from 'modules/editor';
-
 import { BlockComponent, blockType, blockStyles } from './BlockComponent';
 import { ButtonComponent } from './ButtonComponent';
 import { InputComponent } from './InputComponent';
@@ -50,6 +49,7 @@ class DnDComponent extends React.Component {
 
   render() {
     const { type, id, select, ...props } = this.props;
+
     const Element = this.state.element;
     const ReturnComponent = React.cloneElement(Element, {
       ...props,

@@ -5,9 +5,10 @@ import { connect } from 'react-redux';
 import { DropTarget } from 'react-dnd';
 import uuidv1 from 'uuid/v1';
 
-import DragObject from './DragObject';
-import { ItemTypes } from '../constants';
-import { drop, move } from 'modules/dnd';
+// import DragObject from './DragObject';
+import Rnd from './Rnd';
+import { ItemTypes } from '../../constants';
+import { drop } from 'modules/dnd';
 
 class DropArea extends React.Component {
   static propTypes = {
@@ -33,19 +34,8 @@ class DropArea extends React.Component {
         }}
       >
         {componentsKeys.map(key => {
-          const { id, type, position } = components[key];
-          return (
-            <DragObject
-              key={id}
-              id={id}
-              type={type}
-              style={{
-                position: 'absolute',
-                left: `${position.x}px`,
-                top: `${position.y}px`,
-              }}
-            />
-          );
+          const component = components[key];
+          return <Rnd key={component.id} {...component} />;
         })}
         <Overlay show={isOver} />
       </StyledDropArea>
@@ -55,6 +45,7 @@ class DropArea extends React.Component {
 
 const dropAreaTarget = {
   drop(props, monitor, component) {
+    console.log('drop');
     //* Object stuff
     const object = monitor.getItem();
     const objectOffset = monitor.getSourceClientOffset();
@@ -76,13 +67,10 @@ const dropAreaTarget = {
       id: object.id || uuidv1(),
       type: object.type,
       position: offsetWithinDropArea,
+      dimension: { width: 'auto', height: 'auto' },
     };
 
-    if (object.id) {
-      props.move(droppedObject);
-    } else {
-      props.drop(droppedObject);
-    }
+    props.drop(droppedObject);
   },
 };
 
@@ -96,7 +84,7 @@ function collect(connect, monitor) {
 DropArea = DropTarget(ItemTypes.DRAG_OBJECT, dropAreaTarget, collect)(DropArea);
 export default connect(
   state => ({ components: state.dnd.components }),
-  { drop, move },
+  { drop },
 )(DropArea);
 
 const StyledDropArea = styled.div`

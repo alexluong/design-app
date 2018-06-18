@@ -15,4 +15,13 @@ export { BlockComponent, blockType, blockStyles };
 
 const StyledBlock = styled.div`
   ${blockStyles};
+  ${props => {
+    const { width, height } = props;
+    if (width && height) {
+      return `
+        width: ${width}px;
+        height: ${height}px;
+      `;
+    }
+  }};
 `;
