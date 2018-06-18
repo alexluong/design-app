@@ -1,4 +1,4 @@
-import { MOVE, DROP } from './types';
+import { MOVE, DROP, CLEAR } from './types';
 
 const move = component => ({
   type: MOVE,
@@ -14,4 +14,8 @@ const drop = component => ({
   },
 });
 
-export { move, drop };
+const clear = () => ({
+  type: CLEAR,
+});
+
+export { move, drop, clear };

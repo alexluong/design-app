@@ -20,7 +20,7 @@ class DragObject extends React.Component {
   }
 
   render() {
-    const { connectDragSource, isDragging, type, style } = this.props;
+    const { connectDragSource, isDragging, type, id, style } = this.props;
 
     return (
       <StyledDragObject
@@ -30,7 +30,7 @@ class DragObject extends React.Component {
           opacity: isDragging ? 0.5 : 1,
         }}
       >
-        <DnDComponent type={type} style={{ zIndex: -1 }} />
+        <DnDComponent type={type} id={id} style={{ zIndex: -1 }} />
       </StyledDragObject>
     );
   }
@@ -60,7 +60,7 @@ export default DragSource(ItemTypes.DRAG_OBJECT, dragObjectSource, collect)(
   DragObject,
 );
 
-export const StyledDragObject = styled.span`
+const StyledDragObject = styled.span`
   /* width: 10rem; */
   /* height: 10rem; */
   cursor: move;

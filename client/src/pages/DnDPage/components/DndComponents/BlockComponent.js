@@ -1,16 +1,18 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { position } from 'config/theme';
-
 const BlockComponent = props => <StyledBlock {...props} />;
+const blockType = 'block';
+const blockStyles = `width: 10rem;
+height: 10rem;
+background-color: white;
+cursor: pointer;
+display: flex;
+justify-content: center;
+align-items: center;`;
 
-export { BlockComponent };
+export { BlockComponent, blockType, blockStyles };
 
 const StyledBlock = styled.div`
-  width: 10rem;
-  height: 10rem;
-  background-color: white;
-  cursor: pointer;
-  ${position('centerChildren')};
+  ${blockStyles};
 `;

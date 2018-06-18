@@ -1,4 +1,4 @@
-import { MOVE, DROP } from './types';
+import { MOVE, DROP, CLEAR } from './types';
 
 const initialState = {
   components: {},
@@ -15,6 +15,8 @@ const reducer = (state = initialState, action) => {
           [component.id]: { id, type, position },
         },
       };
+    case CLEAR:
+      return initialState;
     default:
       return state;
   }

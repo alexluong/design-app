@@ -1,20 +1,66 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
-import { BlockComponent } from './BlockComponent';
+import { select } from 'modules/editor';
+
+import { BlockComponent, blockType, blockStyles } from './BlockComponent';
 import { ButtonComponent } from './ButtonComponent';
 import { InputComponent } from './InputComponent';
 
-const DnDComponent = ({ type, ...props }) => {
-  switch (type) {
-    case 'block':
-      return <BlockComponent {...props} />;
-    case 'button':
-      return <ButtonComponent {...props} />;
-    case 'input':
-      return <InputComponent {...props} />;
-    default:
-      return <BlockComponent {...props} />;
-  }
-};
+class DnDComponent extends React.Component {
+  state = {
+    type: '',
+    element: null,
+  };
 
-export default DnDComponent;
+  static getDerivedStateFromProps(props) {
+    const { type } = props;
+    switch (type) {
+      case blockType:
+        return {
+          element: <BlockComponent />,
+          styles: blockStyles,
+        };
+      case 'button':
+        return {
+          element: <ButtonComponent />,
+          styles: {},
+        };
+      case 'input':
+        return {
+          element: <InputComponent />,
+          styles: {},
+        };
+      default:
+        console.error(`ERROR: ${type} does not exist.`);
+        return {};
+    }
+  }
+
+  onDoubleClick = e => {
+    const { type, id } = this.props;
+    const { styles } = this.state;
+
+    this.props.select({
+      type,
+      id,
+      styles,
+    });
+  };
+
+  render() {
+    const { type, id, select, ...props } = this.props;
+    const Element = this.state.element;
+    const ReturnComponent = React.cloneElement(Element, {
+      ...props,
+      onDoubleClick: this.onDoubleClick,
+    });
+
+    return ReturnComponent;
+  }
+}
+
+export default connect(
+  null,
+  { select },
+)(DnDComponent);

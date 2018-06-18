@@ -24,10 +24,10 @@ sagaMiddleware.run(sagas);
 //* Persist
 store.subscribe(
   throttle(() => {
-    const { auth, user } = store.getState();
+    const { auth, user, dnd } = store.getState();
 
     if (auth.authenticated) {
-      setItem('state', { auth, user });
+      setItem('state', { auth, user, dnd });
     }
   }, 1000),
 );

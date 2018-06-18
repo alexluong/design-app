@@ -5,9 +5,11 @@
   "dependencies": {
     "@storybook/addon-info": "^3.4.7",
     "axios": "^0.18.0",
+    "brace": "^0.11.1",
     "lodash": "^4.17.10",
     "prop-types": "^15.6.1",
     "react": "^16.4.1",
+    "react-ace": "^6.1.1",
     "react-dnd": "^4.0.5",
     "react-dnd-html5-backend": "^4.0.5",
     "react-dom": "^16.4.1",
